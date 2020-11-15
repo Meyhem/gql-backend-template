@@ -4,10 +4,12 @@ import express from 'express'
 import { parseAuthorization } from './api/auth'
 import { Role, RoleName } from './entity/Role'
 import { User } from './entity/User'
+import { Logger } from 'winston'
 
 export interface Context {
   di: Injection
   auth: Auth
+  logger: Logger
 }
 
 export interface Injection {
@@ -32,11 +34,17 @@ export function createInjection(c: Connection): Injection {
   }
 }
 
-export function createContext(req: express.Request, c: Connection) {
-  const ctx: Context = {
-    di: createInjection(c),
-    auth: parseAuthorization(req.headers.authorization)
-  }
+export function createContext(req: express.Request, c: Connection, logger: Logger) {
+  try {
+    const ctx: Context = {
+      di: createInjection(c),
+      auth: parseAuthorization(req.headers.authorization),
+      logger
+    }
 
-  return ctx
+    return ctx
+  } catch (e) {
+    logger.error(`createContext() ${e}`)
+    throw e
+  }
 }

@@ -13,9 +13,23 @@ export type ResolverConfig<TSource, TArgs> = {
 export type Resolver<TRet, TSource, TArgs> = (cfg: ResolverConfig<TSource, TArgs>) => TRet | Promise<TRet>
 
 export function createResolver<TRet, TSource = unknown, TArgs = unknown>(resolver: Resolver<TRet, TSource, TArgs>) {
-  return (source: TSource, args: TArgs, context: Context) => resolver({ source, context, args })
+  return async (source: TSource, args: TArgs, context: Context) => {
+    try {
+      return await resolver({ source, context, args })
+    } catch (e) {
+      context.logger.error(e)
+      throw e
+    }
+  }
 }
 
 export function createMutation<TRet, TSource = unknown, TArgs = unknown>(mutation: Resolver<TRet, TSource, TArgs>) {
-  return (source: TSource, args: TArgs, context: Context) => mutation({ source, context, args })
+  return async (source: TSource, args: TArgs, context: Context) => {
+    try {
+      return await mutation({ source, context, args })
+    } catch (e) {
+      context.logger.error(e)
+      throw e
+    }
+  }
 }
