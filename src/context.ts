@@ -1,9 +1,13 @@
 import { Connection, Repository } from 'typeorm'
-import { Role } from './entity/Role'
+import express from 'express'
+
+import { parseAuthorization } from './api/auth'
+import { Role, RoleName } from './entity/Role'
 import { User } from './entity/User'
 
 export interface Context {
   di: Injection
+  auth: Auth
 }
 
 export interface Injection {
@@ -11,6 +15,12 @@ export interface Injection {
     users: Repository<User>
     roles: Repository<Role>
   }
+}
+
+export interface Auth {
+  isAuthenticated: boolean
+  id?: number
+  role?: RoleName
 }
 
 export function createInjection(c: Connection): Injection {
@@ -22,9 +32,10 @@ export function createInjection(c: Connection): Injection {
   }
 }
 
-export function createContext(c: Connection) {
+export function createContext(req: express.Request, c: Connection) {
   const ctx: Context = {
-    di: createInjection(c)
+    di: createInjection(c),
+    auth: parseAuthorization(req.headers.authorization)
   }
 
   return ctx

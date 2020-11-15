@@ -13,6 +13,9 @@ export class User {
   passwordHash: string
 
   @Column()
+  salt: string
+
+  @Column()
   firstname: string
 
   @Column()

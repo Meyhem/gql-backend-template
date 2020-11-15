@@ -8,11 +8,16 @@ export const typeDefs = gql`
 
   type Mutation {
     createUser(input: CreateUserInput): User
+    issueToken(username: String!, password: String!): String
   }
 
   # Entities
   type User {
+    id: Int!
     username: String!
+    firstname: String!
+    lastname: String!
+    role: Role!
   }
 
   enum Role {
@@ -24,6 +29,9 @@ export const typeDefs = gql`
   # Inputs
   input CreateUserInput {
     username: String!
-    role: Role
+    firstname: String!
+    lastname: String!
+    password: String!
+    role: Role!
   }
 `

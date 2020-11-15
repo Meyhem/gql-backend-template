@@ -2,6 +2,7 @@ import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import { ApolloServer, IResolvers } from 'apollo-server'
 
+import './config'
 import { seedDb } from './seed'
 import { Context, createContext } from './context'
 import { typeDefs } from './api/definition'
@@ -25,7 +26,7 @@ createConnection()
       typeDefs,
       introspection: true,
       playground: true,
-      context: () => createContext(connection)
+      context: ctx => createContext(ctx.req, connection)
     })
 
     const info = await server.listen(process.env.PORT || 3000)
