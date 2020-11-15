@@ -1,19 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
+import { Role } from './Role'
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ unique: true })
   username: string
+
+  @Column()
+  passwordHash: string
+
+  @Column()
+  firstname: string
+
+  @Column()
+  lastname: string
 
   @Column()
   isLocked: boolean
 
-  @Column()
-  firstName: string
-
-  @Column()
-  lastName: string
+  @ManyToOne(() => Role, r => r.users)
+  role: Role
 }

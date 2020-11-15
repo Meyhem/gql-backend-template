@@ -1,18 +1,34 @@
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
-import { User } from './entity/User'
+import { ApolloServer, IResolvers } from 'apollo-server'
+
+import { seedDb } from './seed'
+import { Context, createContext } from './context'
+import { typeDefs } from './api/definition'
+import { rootQuery } from './api/root-query'
+import { rootMutation } from './api/root-mutation'
 
 console.log('Bootstrapping...')
 
+const resolvers: IResolvers<any, Context> = {
+  Query: rootQuery,
+  Mutation: rootMutation as any
+}
+
 createConnection()
   .then(async connection => {
-    const user = new User()
-    user.firstName = 'Timber'
-    user.lastName = 'Saw'
-    user.username = 'lalal tralala'
-    user.isLocked = false
-    await connection.manager.save(user)
+    console.log('Db conn ok...')
+    await seedDb(connection)
 
-    // const users = await connection.manager.find(User)
+    const server = new ApolloServer({
+      resolvers,
+      typeDefs,
+      introspection: true,
+      playground: true,
+      context: () => createContext(connection)
+    })
+
+    const info = await server.listen(process.env.PORT || 3000)
+    console.log(`Server listening ${info.url}`)
   })
   .catch(error => console.log(error))
