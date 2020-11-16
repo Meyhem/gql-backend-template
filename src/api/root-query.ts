@@ -1,5 +1,8 @@
-import { usersResolver } from '../features/user/query'
+import * as userQuery from '../features/user/query'
+
+// AUTOIMPORT QUERY
 
 export const rootQuery = {
-  users: usersResolver
+  // AUTOREGISTER QUERY
+  ...userQuery
 }
