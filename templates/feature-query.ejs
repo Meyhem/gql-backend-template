@@ -1,0 +1,6 @@
+import { createResolver } from '../../api/helpers'
+import { <%- casing.pascalCase(name) %>Type, mapTo<%- casing.pascalCase(name) %>Type } from './types'
+
+export const <%- casing.camelCase(name) %>Resolver = createResolver<<%- casing.pascalCase(name) %>Type>(async () => {
+    return mapTo<%- casing.pascalCase(name) %>Type({})
+})

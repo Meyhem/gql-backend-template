@@ -1,0 +1,8 @@
+import { createMutation } from '../../api/helpers'
+import { mapTo<%- casing.pascalCase(name) %>Type, <%- casing.pascalCase(name) %>Type } from './types'
+
+export const mutate<%- casing.pascalCase(name) %> = createMutation<<%- casing.pascalCase(name) %>Type>(
+  async () => {
+    return mapTo<%- casing.pascalCase(name) %>Type({})
+  }
+)
