@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinTable } from 'typeorm'
+import { Post } from './Post'
 import { Role } from './Role'
 
 @Entity()
@@ -26,4 +27,7 @@ export class User {
 
   @ManyToOne(() => Role, r => r.users)
   role: Role
+
+  @OneToMany(() => Post, p => p.author)
+  posts: Post[]
 }

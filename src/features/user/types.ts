@@ -1,5 +1,6 @@
 import { RoleName } from '../../entity/Role'
 import { User } from '../../entity/User'
+import { PostType } from '../post/types'
 
 export interface UserType {
   id: number
@@ -7,6 +8,7 @@ export interface UserType {
   firstname: string
   lastname: string
   role: RoleName
+  posts: PostType[]
 }
 
 export interface CreateUserInput {
@@ -15,14 +17,4 @@ export interface CreateUserInput {
   lastname: string
   password: string
   role: RoleName
-}
-
-export function mapToUserType(u: User): UserType {
-  return {
-    id: u.id,
-    username: u.username,
-    firstname: u.firstname,
-    lastname: u.lastname,
-    role: u.role.name
-  }
 }

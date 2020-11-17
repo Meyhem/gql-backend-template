@@ -7,14 +7,27 @@ import './config'
 import { seedDb } from './seed'
 import { Context, createContext } from './context'
 import { typeDefs } from './api/definition'
-import { rootQuery } from './api/root-query'
-import { rootMutation } from './api/root-mutation'
+
+import { query as userQuery, postsOfUserResolver } from './features/user/query'
+import { query as postQuery } from './features/post/query'
+
+import { mutation as userMutation } from './features/user/mutation'
+import { mutation as postMutation } from './features/post/mutation'
 
 console.log('Bootstrapping...')
 
 const resolvers: IResolvers<any, Context> = {
-  Query: rootQuery,
-  Mutation: rootMutation as any
+  Query: {
+    ...userQuery,
+    ...postQuery
+  },
+  Mutation: {
+    ...userMutation
+    // ...postMutation
+  },
+  User: {
+    posts: postsOfUserResolver
+  }
 }
 
 createConnection()

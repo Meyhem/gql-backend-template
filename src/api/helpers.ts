@@ -1,3 +1,4 @@
+import DataLoader from 'dataloader'
 import { Context } from '../context'
 
 export interface Input<T> {
@@ -9,7 +10,6 @@ export type ResolverConfig<TSource, TArgs> = {
   args: TArgs
   context: Context
 }
-
 export type Resolver<TRet, TSource, TArgs> = (cfg: ResolverConfig<TSource, TArgs>) => TRet | Promise<TRet>
 
 export function createResolver<TRet, TSource = unknown, TArgs = unknown>(resolver: Resolver<TRet, TSource, TArgs>) {
@@ -32,4 +32,8 @@ export function createMutation<TRet, TSource = unknown, TArgs = unknown>(mutatio
       throw e
     }
   }
+}
+
+export function createLoader<T>(l: DataLoader.BatchLoadFn<number, T>) {
+  return new DataLoader(l)
 }
