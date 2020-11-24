@@ -3,7 +3,7 @@ import { mapToPostType } from '../mappers'
 import { PostType } from './types'
 
 export const mutation = {
-  createPost: createMutation<PostType>(async () => {
+  createPost: createMutation<PostType>(null, async () => {
     return mapToPostType({} as any)
   })
 }

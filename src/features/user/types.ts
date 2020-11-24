@@ -1,5 +1,4 @@
 import { RoleName } from '../../entity/Role'
-import { User } from '../../entity/User'
 import { PostType } from '../post/types'
 
 export interface UserType {

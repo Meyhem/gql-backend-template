@@ -1,9 +1,26 @@
 import { gql } from 'apollo-server'
 
 export const typeDefs = gql`
+  # Helpers
+  enum OrderDirection {
+    ASC
+    DESC
+  }
+
+  input OrderEntry {
+    name: String!
+    dir: OrderDirection!
+  }
+
+  input ListFilter {
+    skip: Int!
+    take: Int!
+    orderBy: [OrderEntry]
+  }
+
   # Roots
   type Query {
-    users: [User]
+    users(filter: ListFilter): [User]
     posts: [Post]
   }
 

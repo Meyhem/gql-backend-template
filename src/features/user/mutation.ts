@@ -12,6 +12,7 @@ import { mapToUserType } from '../mappers'
 
 export const mutation = {
   createUser: createMutation<UserType, unknown, Input<CreateUserInput>>(
+    null,
     async ({
       args,
       context: {
@@ -37,21 +38,24 @@ export const mutation = {
       return mapToUserType(usr)
     }
   ),
-  issueToken: createMutation<string, unknown, { username: string; password: string }>(async ({ args, context }) => {
-    const { username, password } = args
-    const u = await context.di.db.users.findOne({ where: { username: username }, relations: ['role'] })
-    const credError = new AuthenticationError('Invalid username/password')
+  issueToken: createMutation<string, unknown, { username: string; password: string }>(
+    null,
+    async ({ args, context }) => {
+      const { username, password } = args
+      const u = await context.di.db.users.findOne({ where: { username: username }, relations: ['role'] })
+      const credError = new AuthenticationError('Invalid username/password')
 
-    if (!u) {
-      throw credError
+      if (!u) {
+        throw credError
+      }
+
+      const passwordHash = hashPassword(password, u.salt)
+
+      if (passwordHash != u.passwordHash) {
+        throw credError
+      }
+
+      return sign({ id: u.id, role: u.role.name }, config.JWT_SECRET, { expiresIn: '1h' })
     }
-
-    const passwordHash = hashPassword(password, u.salt)
-
-    if (passwordHash != u.passwordHash) {
-      throw credError
-    }
-
-    return sign({ id: u.id, role: u.role.name }, config.JWT_SECRET, { expiresIn: '1h' })
-  })
+  )
 }
