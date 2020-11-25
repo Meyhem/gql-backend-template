@@ -20,7 +20,7 @@ export const typeDefs = gql`
 
   # Roots
   type Query {
-    users(filter: ListFilter): [User]
+    users(filter: ListFilter!): [User]
     posts: [Post]
   }
 
